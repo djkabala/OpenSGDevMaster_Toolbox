@@ -299,9 +299,8 @@ ColladaController::createInstance(ColladaInstanceElement *colInstElem)
 	handleBindMaterial(geo, colInstCont);
 	
 	if(_hasSkin)
-	{
-		// create the skeleton.  Joints won't be fully resolved until later (see ColladaGlobal)
-		SkeletonBlendedGeometryRecPtr skeleton = SkeletonBlendedGeometry::create();	
+	{ // create the skeleton. Joints won't be fully resolved until later (see ColladaGlobal)
+		SkeletonBlendedGeometryRecPtr skeleton = SkeletonBlendedGeometry::create();
 		skeleton->setBaseGeometry(geo);
 		skeleton->setBindTransformation(_mSkin.bindShapeMatrix);
 
@@ -313,32 +312,17 @@ ColladaController::createInstance(ColladaInstanceElement *colInstElem)
 		std::map<std::string, NodeRecPtr> joints;
 		std::vector<NodeRecPtr> osgNodes;
 		std::vector<domNodeRef> domNodes;
-		// create the joints/nodes and fetch the nodes
-		UInt32 i(0),j(0);
-		for(i = 0; i < skelArr.getCount(); i++)
-		{
-			domNodeRef colDomNode = daeSafeCast<domNode>(skelArr[i]->getValue().getElement());
 
-			std::string nodeName = colDomNode->getSid();
-			domNodes.push_back(colDomNode);
-
-			NodeRecPtr jointNode = createJointFromNode(colDomNode);
-			joints[nodeName] = jointNode;
-
-			setName(jointNode,colDomNode->getSid());
-			osgNodes.push_back(jointNode);
-		}
-
-		/* 
-			The heirarchy of the skeleton structure must be created from the 
-			visual scene node heirarchy.  But, since we don't want to have two
-			instances of the heirarchy, we just save the IDs of the nodes to a map, and 
-			link up the joints after the visual scene is finished reading.
+		/*
+		The heirarchy of the skeleton structure must be created from the
+		visual scene node heirarchy. But, since we don't want to have two
+		instances of the heirarchy, we just save the IDs of the nodes to a map, and
+		link up the joints after the visual scene is finished reading.
 		*/
-		
+
 		// the code below is added to draw the bones of the skeletons
 
-		 //SkeletonDrawer System Material
+		//SkeletonDrawer System Material
 		LineChunkRecPtr ExampleLineChunk = LineChunk::create();
 		ExampleLineChunk->setWidth(2.0f);
 		ExampleLineChunk->setSmooth(true);
@@ -355,9 +339,9 @@ ColladaController::createInstance(ColladaInstanceElement *colInstElem)
 		skelDraw->setSkeleton(skeleton);
 		skelDraw->setMaterial(ExampleMaterial);
 		skelDraw->setDrawBindPose(true);
-		skelDraw->setDrawPose(true);   
-		skelDraw->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0));  //When the skeleton's bind pose is rendered, it will be green
-		skelDraw->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0));  //The skeleton's current pose is rendered in blue
+		skelDraw->setDrawPose(true);
+		skelDraw->setBindPoseColor(Color4f(0.0, 1.0, 0.0, 1.0)); //When the skeleton's bind pose is rendered, it will be green
+		skelDraw->setPoseColor(Color4f(0.0, 0.0, 1.0, 1.0)); //The skeleton's current pose is rendered in blue
 
 		NodeRecPtr skelDrawNode = makeNodeFor(skelDraw);
 
@@ -369,12 +353,11 @@ ColladaController::createInstance(ColladaInstanceElement *colInstElem)
 		editInstStore().push_back(skelNode);
 		editInstStore().push_back(skelDrawNode);
 		editInstStore().push_back(theNode);
-		
+
 		return theNode;
 	} // end if(_hasSkin)
 	else// if(_hasMorph) // it will either have a morph or a skin
-	{
-		// do things make work
+	{ // do things make work
 		MorphGeometryRefPtr newMorphGeo = MorphGeometry::create();
 		newMorphGeo->setBaseGeometry(geo);
 		for(UInt32 i(0); i < _mMorph.targets.size(); i++)
@@ -385,12 +368,11 @@ ColladaController::createInstance(ColladaInstanceElement *colInstElem)
 				newMorphGeo->addMorphTarget(target,_mMorph.weights[i]);
 			}
 		}
-		
+
 		NodeRecPtr newNode = makeNodeFor(newMorphGeo);
 		editInstStore().push_back(newNode);
 		return newNode;
-	}
-	
+    }
 }
 
 GeometryTransitPtr ColladaController::handleGeometry(domGeometryRef geometry, ColladaInstanceElement *colInstElem )
@@ -410,59 +392,59 @@ GeometryTransitPtr ColladaController::handleGeometry(domGeometryRef geometry, Co
 	return GeometryTransitPtr(geo);
 }
 
-/*! Creates a joint, and sets its transformations based on the transformation
-	of the domNode.
-*/
-NodeTransitPtr ColladaController::createJointFromNode(domNode *node)
-{
-	TransformRecPtr newJoint = Transform::create();
-	Matrix baseXform,jointXform,tmp;
 
-	domTranslate_Array translations = node->getTranslate_array();
-	domRotate_Array rotations = node->getRotate_array();
-	domScale_Array scalings = node->getScale_array();
 
-	UInt32 i(0);
-	for(i = 0; i < translations.getCount(); i++)
-	{	
-		Vec3f translate(translations[i]->getValue()[0],
-						translations[i]->getValue()[1],
-						translations[i]->getValue()[2]);
-		tmp.setTranslate(translate);
 
-		newJoint->editMatrix().mult(tmp);
-		
-	}
 
-	tmp.setIdentity(); // reset tmp matrix
-	for(i = 0; i < rotations.getCount(); i++)
-	{	
-		
-		Quaternion quat;
-		
-		quat.setValueAsAxisDeg( rotations[i]->getValue()[0],
-								rotations[i]->getValue()[1],
-								rotations[i]->getValue()[2],
-								rotations[i]->getValue()[3]);
-		tmp.setRotate(quat);
 
-		newJoint->editMatrix().mult(tmp);	
-	}
 
-	tmp.setIdentity(); // reset tmp matrix
-	for(i = 0; i < scalings.getCount(); i++)
-	{	
-		Vec3f scale(scalings[i]->getValue()[0],
-					scalings[i]->getValue()[1],
-					scalings[i]->getValue()[2]);
-		tmp.setScale(scale);
-		
-		newJoint->editMatrix().mult(tmp);
-	}
 
-    NodeUnrecPtr      jointNode = makeNodeFor(newJoint);
-	return NodeTransitPtr(jointNode);
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void
 ColladaController::handleBindMaterial(  Geometry *geo, 

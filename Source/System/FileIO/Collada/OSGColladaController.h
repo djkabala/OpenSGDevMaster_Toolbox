@@ -146,7 +146,6 @@ class OSG_FILEIO_DLLMAPPING ColladaController : public ColladaInstantiableElemen
 					    UInt32                 inSet,
 					    UInt32                &offset     );
 
-	NodeTransitPtr  createJointFromNode(domNode *node);
 	bool _hasSkin;
 	bool _hasMorph;
 	SkinInfo _mSkin;
