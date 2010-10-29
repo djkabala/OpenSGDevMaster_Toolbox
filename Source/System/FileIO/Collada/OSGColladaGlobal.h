@@ -70,6 +70,7 @@ OSG_BEGIN_NAMESPACE
 
 class ColladaInstanceController;
 class FieldAnimation;
+class ColladaAnimation;
 
 class OSG_FILEIO_DLLMAPPING ColladaGlobal : public MemoryObject
 {
@@ -171,7 +172,7 @@ class OSG_FILEIO_DLLMAPPING ColladaGlobal : public MemoryObject
 	typedef std::map<domNode* ,Node*>	NodeToNodeMap;
 	typedef NodeToNodeMap::iterator		NTNMapIt;
 
-	typedef std::map<daeElement *, FieldAnimation *> AnimationMap;
+	typedef std::map<daeElement *, ColladaAnimation *> AnimationMap;
 	typedef AnimationMap::iterator AnimMapIt;
 
 	NodeToNodeMap			&editNodeToNodeMap			(void);
