@@ -78,7 +78,7 @@ class OSG_SYSTEM_DLLMAPPING StatisticsForeground :
     /*! \name                   draw                                       */
     /*! \{                                                                 */
 
-    virtual void draw(DrawEnv *pEnv, Viewport *pPort) = 0;
+    virtual void draw(DrawEnv *pEnv) = 0;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

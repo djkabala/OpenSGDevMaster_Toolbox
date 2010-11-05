@@ -241,5 +241,11 @@ void SimpleStage::setupPartition(
     }
 
     pPart->setBackground(pBack);
+
+    pPart->clearForegrounds();
+    for(UInt32 i(0) ; i<getMFForegrounds()->size() ; ++i)
+    {
+        pPart->pushToForegrounds(getForegrounds(i));
+    }
 }
 

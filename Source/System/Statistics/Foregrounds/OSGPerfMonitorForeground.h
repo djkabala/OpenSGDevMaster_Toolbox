@@ -98,7 +98,7 @@ class OSG_UTIL_DLLMAPPING PerfMonitorForeground : public PerfMonitorForegroundBa
     /*! \name                   draw                                       */
     /*! \{                                                                 */
 
-    virtual void draw(DrawEnv *pEnv, Viewport *pPort);
+    virtual void draw(DrawEnv *pEnv);
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
