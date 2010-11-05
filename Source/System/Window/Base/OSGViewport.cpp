@@ -364,6 +364,7 @@ void Viewport::render(RenderActionBase *action)
     action->setBackground(getBackground());
     action->setViewport  (this           );
     action->setTravMask  (getTravMask()  );
+    action->setTravMask  (getTravMask()  );
 
     action->apply(getRoot());
 
@@ -379,6 +380,11 @@ void Viewport::render(RenderActionBase *action)
         oEnv.setTileFullSize(getCamera()->tileGetFullSize());
         oEnv.setTileRegion  (getCamera()->tileGetRegion  ());
 		oEnv.setAction         ( action );
+        oEnv.setViewportDimension(getPixelLeft(),
+                                  getPixelBottom(),
+                                  getPixelRight(),
+                                  getPixelTop(),
+                                  isFullWindow());
 
         for(UInt16 i=0; i < getMFForegrounds()->size(); i++)
         {
@@ -422,6 +428,11 @@ void Viewport::renderForegrounds(Window *pWin)
 
     oEnv.setTileFullSize(getCamera()->tileGetFullSize());
     oEnv.setTileRegion  (getCamera()->tileGetRegion  ());
+    oEnv.setViewportDimension(getPixelLeft(),
+                              getPixelBottom(),
+                              getPixelRight(),
+                              getPixelTop(),
+                              isFullWindow());
 
     for(UInt16 i=0; i < getMFForegrounds()->size(); i++)
     {
