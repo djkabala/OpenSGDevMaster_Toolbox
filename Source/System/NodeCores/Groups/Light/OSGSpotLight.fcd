@@ -31,7 +31,7 @@ quadraticAttenuation attributes.
 		type="Real"
 		cardinality="single"
 		visibility="external"
-        defaultValue="0.f"
+        defaultValue="0.1f"
 	>
 	The drop-off exponent of the spotlight.
 	</Field>
@@ -40,7 +40,7 @@ quadraticAttenuation attributes.
 		type="Real"
 		cardinality="single"
 		visibility="external"
-        defaultValue="0.f"
+        defaultValue="1.0472f"
 	>
 	The cut-off angle of the spotlight (in radians, not degrees!).
 	</Field>

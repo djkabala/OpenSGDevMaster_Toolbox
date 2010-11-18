@@ -2,7 +2,7 @@
  *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
- *             Copyright (C) 2000,2001 by the OpenSG Forum                   *
+ *             Copyright (C) 2000-2002 by the OpenSG Forum                   *
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
@@ -36,161 +36,128 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_NAVIGATOR_H_
-#define _OSG_NAVIGATOR_H_
-
-#include "OSGConfig.h"
-#include "OSGUtilDef.h"
-
-#include "OSGNavigatorBase.h"
-#include "OSGWindow.h"
-#include "OSGViewport.h"
-#include "OSGBaseTypes.h"
-#include "OSGLine.h"
-#include "OSGNode.h"
-#include "OSGVector.h"
-#include "OSGQuaternion.h"
-#include "OSGIntersectAction.h"
+#ifndef _OSG_NAVBALLENGINE_H_
+#define _OSG_NAVBALLENGINE_H_
 
 #include "OSGNavigatorEngine.h"
-#include "OSGFlyEngine.h"
-#include "OSGNoneEngine.h"
-#include "OSGTrackballEngine.h"
-#include "OSGNavballEngine.h"
-#include "OSGWalkEngine.h"
 
 OSG_BEGIN_NAMESPACE
 
-typedef NavballEngine   NavballNavigator;
-typedef TrackballEngine TrackballNavigator;
-typedef FlyEngine       FlyNavigator;
-typedef WalkEngine      WalkNavigator;
+class Navigator;
 
-/*! \brief General Navigator for wrapping simple navigators. See \ref 
-    PageSystemWindowNavigatorsNavigator for a description.
+/*! \brief NavballEngine provides the trackball navigator functionality.
 */
-class OSG_UTIL_DLLMAPPING Navigator : public NavigatorBase
+class OSG_UTIL_DLLMAPPING NavballEngine : public NavigatorEngine
 {
+    typedef NavigatorEngine Inherited;
+    typedef NavballEngine Self;
+
     /*==========================  PUBLIC  =================================*/
   public:
     /*---------------------------------------------------------------------*/
-    /*! \name                   Constructors                               */
+    /*! \name                      Types                                   */
     /*! \{                                                                 */
 
-    Navigator(void);
+    OSG_GEN_INTERNAL_MEMOBJPTR(NavballEngine);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                   Destructors                                */
+    /*! \name                    Construction                              */
     /*! \{                                                                 */
 
-    virtual ~Navigator(void);
+    static ObjTransitPtr create(Real32 rSize = 0.8f);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                    Notificators                              */
+    /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    virtual void buttonPress  (Int16 button,  Int16 x, Int16 y);
-    virtual void buttonRelease(Int16 button,  Int16 x, Int16 y);
-    virtual void keyPress     (Int16 key   ,  Int16 x, Int16 y);
-    virtual void moveTo       (               Int16 x, Int16 y);
-    virtual void idle         (Int16 buttons, Int16 x, Int16 y);
-
-    void updateCameraTransformation();
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                        Set                                   */
-    /*! \{                                                                 */
-
-    void setMode         (Mode new_mode, bool copyViewParams=false);
-    void setViewport     (Viewport     *new_viewport);
-    void setRotationAngle(Real32        new_angle   );
-    void setMotionFactor (Real32        new_factor  );
-    void setFrom         (Pnt3f         new_from    );
-    void setAt           (Pnt3f         new_at      );
-    void setDistance     (Real32        new_distance);
-    void setUp           (Vec3f         new_up      );
-    void set             (Pnt3f         new_from, Pnt3f new_at, Vec3f new_up);
-    void set             (const Matrix &new_matrix  );
-    bool setAbsolute     (bool          state       );
-    bool setClickCenter  (bool          state       );
-
-    bool setClickNoIntersect (bool state);
-
-    void setCameraTransformation(Node * const new_cartn);
-
-    void setUserEngine(NavigatorEngine* userEngine);
+    const char *getClassname(void) { return "NavballEngine"; }
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                        Get                                   */
     /*! \{                                                                 */
 
-    const Matrix &getMatrix();
-    const Pnt3f  &getFrom();
-    const Pnt3f  &getAt();
-    const Vec3f  &getUp();
-          Real32  getDistance();
-          State   getState();
-          Mode    getMode();
-          Real32  getRotationAngle();
-          Real32  getMotionFactor();
-          bool    getAbsolute();
-          bool    getClickCenter();
-          bool    getClickNoIntersect();
-
-          bool    getMoved(void);
-          Int16   getLastX(void);
-          Int16   getLastY(void);
-    Viewport     *getViewport(void);
-
-    NavballEngine&   getNavballEngine  (void);
-    TrackballEngine& getTrackballEngine(void);
-    FlyEngine&       getFlyEngine      (void);
-    WalkEngine&      getWalkEngine     (void);
-    NoneEngine&      getNoneEngine     (void);
-    NavigatorEngine& getUserEngine     (void);
+    virtual const Pnt3f  &getFrom(void);
+    virtual const Pnt3f  &getAt(void);
+    virtual const Vec3f  &getUp(void);
+    virtual const Matrix &getMatrix(void);
+    virtual Real32 getDistance(void);
 
     /*! \}                                                                 */
-    /*==========================  PRIVATE  ================================*/
-  private:
-
     /*---------------------------------------------------------------------*/
-    /*! \name                    Class Fields                              */
+    /*! \name                        Set                                   */
     /*! \{                                                                 */
 
-    NavigatorEngineRefPtr _engine;  // current engine
+    virtual void setFrom(Pnt3f new_from);
+    virtual void setAt(Pnt3f new_at);
+    virtual void setUp(Vec3f new_up);
+    virtual void set(Pnt3f new_from, Pnt3f new_at, Vec3f new_up);
+    virtual void set(const Matrix & new_matrix);
+    virtual void setDistance(Real32 new_distance);
 
-    TrackballEngineRefPtr _trackballEngine;
-    FlyEngineRefPtr       _flyEngine;
-    WalkEngineRefPtr      _walkEngine;
-    NavballEngineRefPtr   _navballEngine;
-    NoneEngineRefPtr      _noneEngine;
-    NavigatorEngineRefPtr _userEngine;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name             navigator engine callbacks                       */
+    /*! \{                                                                 */
 
-    Real32             _rRotationAngle;
-    Real32             _rMotionFactor;
-    bool               _absolute;
+    virtual void buttonPress(Int16 button,   Int16 x, Int16 y, Navigator* nav);
+    virtual void buttonRelease(Int16 button, Int16 x, Int16 y, Navigator* nav);
+    virtual void keyPress(Int16 key,         Int16 x, Int16 y, Navigator* nav);
+    virtual void moveTo(                     Int16 x, Int16 y, Navigator* nav);
+    virtual void idle(Int16 buttons,         Int16 x, Int16 y, Navigator* nav);
 
-    ViewportRecPtr     _vp;
-    NodeRecPtr         _cartN;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name              Navball Transformations                       */
+    /*! \{                                                                 */
 
-    bool               _moved;
-    bool               _clickCenter;
-    bool               _clickNoIntersect;
-    Int16              _lastX;
-    Int16              _lastY;
+    void rotate     (Real32 fromX, Real32 fromY, Real32 toX, Real32 toY);
+    void translateXY(Real32 distanceX, Real32 distanceY);
+    void translateZ (Real32 distance);
 
-    Matrix      theMatrix;
+
+    /*! \}                                                                 */
+    /*==========================  PROTECTED  ==============================*/
+  protected:
+    /*---------------------------------------------------------------------*/
+    /*! \name            Constructors/Destructor                           */
+    /*! \{                                                                 */
+
+             NavballEngine(Real32 rSize = 0.8f);
+    virtual ~NavballEngine(void               );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Members                                  */
+    /*! \{                                                                 */
+
+    Real32 _rDistance;
+    Matrix _finalMatrix;
+    Pnt3f  _pFrom;
+    Pnt3f  _pAt;
+    Vec3f  _vUp;
+
+    /* temporary values */
+    Pnt3f  _ip;
+    Vec3f  _dir;
 
     /*! \}                                                                 */
 
- public:
-    bool calcFromTo(Int16 x, Int16 y, Real32& fromX, Real32& fromY,
-                    Real32& toX, Real32& toY);
+    void updateFinalMatrix();
+    void calcDeltas(Int16 , Int16 , Int16 toX, Int16 toY,
+                                     Real32 &distanceX, Real32 &distanceY,
+                                     Navigator* nav);
+    void getIntersectionPoint(Int16 x, Int16 y, Navigator* nav);
+
+  private:
+    /* Not implemented */
+    NavballEngine(const NavballEngine &other);
+    NavballEngine &operator =(const NavballEngine &other);
 };
+
+OSG_GEN_MEMOBJPTR(NavballEngine);
 
 OSG_END_NAMESPACE
 

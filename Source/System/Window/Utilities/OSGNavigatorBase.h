@@ -54,6 +54,7 @@ class OSG_UTIL_DLLMAPPING NavigatorBase
         TRACKBALL=0,
         FLY,
         WALK,
+        NAVBALL,
         NONE,
         USER
     };

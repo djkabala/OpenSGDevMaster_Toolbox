@@ -474,8 +474,8 @@ FieldContainerTransitPtr SpotLightBase::shallowCopy(void) const
 SpotLightBase::SpotLightBase(void) :
     Inherited(),
     _sfDirection              (Vec3r(0.f,0.f,1.f)),
-    _sfSpotExponent           (Real(0.f)),
-    _sfSpotCutOff             (Real(0.f))
+    _sfSpotExponent           (Real(0.1f)),
+    _sfSpotCutOff             (Real(1.0472f))
 {
 }
 
