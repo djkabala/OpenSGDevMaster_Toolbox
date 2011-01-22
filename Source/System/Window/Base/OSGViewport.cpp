@@ -395,7 +395,7 @@ void Viewport::render(RenderActionBase *action)
                 pTarget->activate(&oEnv);
             }
 
-            pForeground->draw(&oEnv, this);
+            pForeground->draw(&oEnv);
 
             if(pTarget != NULL)
             {
@@ -443,7 +443,7 @@ void Viewport::renderForegrounds(Window *pWin)
             pTarget->activate(&oEnv);
         }
 
-        pForeground->draw(&oEnv, this);
+        pForeground->draw(&oEnv);
 
         if(pTarget != NULL)
         {
